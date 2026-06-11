@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "itntext"
+version = "0.1.1"
+description = "Improved Text Normalization and Inverse Text Normalization library based on WeTextProcessing"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "itntext contributors"}
+]
+requires-python = ">=3.8"
+dependencies = [
+    "kaldifst>=1.0",
+    "importlib_resources>=5.0; python_version<'3.9'",
+]
+
+[project.optional-dependencies]
+dev = ["pynini>=2.1.5"]
+test = ["pytest>=7.0", "pytest-benchmark>=4.0"]
+
+[project.urls]
+Homepage = "https://github.com/alanpaine/itntext"
+Repository = "https://github.com/alanpaine/itntext"
+Issues = "https://github.com/alanpaine/itntext/issues"
+
+[project.scripts]
+itntext = "itntext.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["itntext*"]

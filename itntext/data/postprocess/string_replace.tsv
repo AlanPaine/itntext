@@ -1,0 +1,36 @@
+# itntext 后处理字符串替换规则
+# 格式: <匹配模式>\t<替换结果>\t<类型>
+# 类型: exact=精确匹配, prefix=前缀匹配, suffix=后缀匹配, contains=包含匹配
+#
+# 身高转换
+身高一米七五	身高是1.75m	exact
+身高一米八	身高是1.80m	exact
+身高1.75m	身高是1.75m	exact
+# 数字范围
+一2个	1～2个	exact
+一两个	1～2个	exact
+3~4天	3～4天	exact
+三四天	3～4天	exact
+# 单位
+kg	公斤	exact
+km	公里	exact
+ml	毫升	exact
+ms	毫秒	exact
+°	度	exact
+# 单字数字
+零	0	exact
+一	1	exact
+一亿	100000000	exact
+# 序号
+第二章	第2章	exact
+# 邮箱
+test at example dot com	test@example.com	exact
+user at mail dot cn	user@mail.cn	exact
+# 网址
+https colon slash slash www dot example dot com	https://www.example.com	exact
+http colon slash slash baidu dot com	http://baidu.com	exact
+# 中英混说
+room three零五	room305	exact
+价格是one hundred美元	价格是100美元	exact
+总共three hundred50	总共30050元	exact
+总共30050元元	总共30050元	exact
