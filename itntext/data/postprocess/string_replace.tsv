@@ -17,12 +17,29 @@ km	公里	exact
 ml	毫升	exact
 ms	毫秒	exact
 °	度	exact
+# 速度单位（FST 输出格式）
+公里/h	km/h	exact
+公里/小时	km/h	exact
 # 单字数字
 零	0	exact
-一	1	exact
+# 注意："一"不在这里全局替换，由 FST 根据上下文处理
+# 一	1	exact  # 已删除，FST 能正确区分"一百二十三"和"一旦"
 一亿	100000000	exact
 # 序号
 第二章	第2章	exact
+第三章	第3章	exact
+第四章	第4章	exact
+第五章	第5章	exact
+第六章	第6章	exact
+第七章	第7章	exact
+第八章	第8章	exact
+第九章	第9章	exact
+第十章	第10章	exact
+# 季度
+第一季度	第1季度	exact
+第二季度	第2季度	exact
+第三季度	第3季度	exact
+第四季度	第4季度	exact
 # 邮箱
 test at example dot com	test@example.com	exact
 user at mail dot cn	user@mail.cn	exact

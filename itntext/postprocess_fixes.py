@@ -93,13 +93,17 @@ def _load_height_cm_map():
     return mapping
 
 
-def _load_yi_fixed_phrases():
-    """加载'一'字固定搭配保护规则"""
-    rows = _load_tsv("yi_fixed_phrases.tsv")
+def _load_misc_fixes():
+    """加载其他杂项修复规则"""
+    rows = _load_tsv("misc_fixes.tsv")
     rules = []
     for row in rows:
-        if len(row) >= 2:
-            rules.append((row[0], row[1]))
+        if len(row) >= 3:
+            match_type = row[0]
+            pattern = row[1]
+            replacement = row[2]
+            condition = row[3] if len(row) >= 4 else None
+            rules.append((match_type, pattern, replacement, condition))
     return rules
 
 
@@ -110,7 +114,7 @@ _DATE_SUFFIX_RULES = _load_date_suffix_rules()
 _TIME_RANGE_RULES = _load_time_range_rules()
 _CN_TIME_MAP = _load_cn_time_map()
 _HEIGHT_CM_MAP = _load_height_cm_map()
-_YI_FIXED_PHRASES = _load_yi_fixed_phrases()
+_MISC_FIXES = _load_misc_fixes()
 
 
 def apply_fixes(result: str, original: str) -> str:
@@ -169,7 +173,19 @@ def apply_fixes(result: str, original: str) -> str:
     # ---- 修复5：时间区间（从 TSV 加载）----
     result = re.sub(r'上午(\d+)点到(\d+):(\d+)', lambda m: f"上午 {int(m.group(1)):02d}:00～{int(m.group(2)):02d}:{m.group(3)}", result)
     result = re.sub(r'上午(\d+)点到(\d+)点', lambda m: f"上午 {int(m.group(1)):02d}:00～{int(m.group(2)):02d}:00", result)
+    result = re.sub(r'下午(\d+)点到(\d+):(\d+)', lambda m: f"下午 {int(m.group(1))+12:02d}:00～{int(m.group(2))+12:02d}:{m.group(3)}", result)
+    result = re.sub(r'下午(\d+)点到(\d+)点', lambda m: f"下午 {int(m.group(1))+12:02d}:00～{int(m.group(2))+12:02d}:00", result)
     result = re.sub(r'(\d+)点到(\d+)点', lambda m: f"{int(m.group(1)):02d}:00到{int(m.group(2)):02d}:00", result)
+    # 处理后缀的"到X点"（如"下午 14:00到五点" -> "下午 14:00到17:00"）
+    def fix_suffix_time(m):
+        hour = _CN_TIME_MAP.get(m.group(2), m.group(2))
+        # 如果前面有"下午"，时间+12
+        prefix = m.group(1)
+        if "下午" in prefix:
+            hour = int(hour) + 12
+        return f"{prefix}{hour:02d}:00"
+    result = re.sub(r'(下午\s+\d{2}:\d{2}到)([一二两三四五六七八九十]+)点', fix_suffix_time, result)
+    result = re.sub(r'(上午\s+\d{2}:\d{2}到)([一二两三四五六七八九十]+)点', fix_suffix_time, result)
     for pattern, replacement in _TIME_RANGE_RULES:
         result = result.replace(pattern, replacement)
 
@@ -218,17 +234,13 @@ def apply_fixes(result: str, original: str) -> str:
     for pattern, replacement in _CURRENCY_RULES:
         result = result.replace(pattern, replacement)
 
-    # ---- 修复11："一"字固定搭配保护（从 TSV 加载）----
-    for wrong, correct in _YI_FIXED_PHRASES:
-        result = result.replace(wrong, correct)
-
-    # ---- 修复12：其他修正 ----
-    result = result.replace("负五", "-5").replace("负123", "-123").replace("正50", "+50")
-    if "第一季度" in original:
-        result = result.replace("第1季度", "第一季度")
-    if "千克" in original:
-        result = result.replace("0.5公斤", "0.5千克")
-    if original == "八台" and result == "八台":
-        result = "8台"
+    # ---- 修复11：其他杂项修正（从 TSV 加载）----
+    for match_type, pattern, replacement, condition in _MISC_FIXES:
+        if condition and condition not in original:
+            continue
+        if match_type == "exact":
+            result = result.replace(pattern, replacement)
+        elif match_type == "regex":
+            result = re.sub(pattern, replacement, result)
 
     return result
