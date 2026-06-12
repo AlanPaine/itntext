@@ -41,5 +41,3 @@ class Normalizer(Processor):
         if cache_dir is None:
             cache_dir = os.path.dirname(os.path.abspath(__file__))
         self.build_fst("zh_tn", cache_dir, overwrite_cache)
-        if remove_erhua:
-            self.set_verbalizer_variant("remove_erhua")

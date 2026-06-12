@@ -107,7 +107,7 @@ tn_no_punct = Normalizer(lang="zh", operator="tn", remove_puncts=True)
 # 但中文全角标点被转成半角后，FST 的 punct 列表可能不包含所有中文标点
 # 这是底层 FST 数据覆盖范围的问题
 result_no_punct = tn_no_punct.normalize("你好，世界！")
-check("去标点", "你好，世界！", "你好,世界!", result_no_punct)
+check("去标点", "你好，世界！", "你好世界", result_no_punct)
 
 # --- remove_erhua (TN) ---
 print("\n--- remove_erhua (TN) ---")

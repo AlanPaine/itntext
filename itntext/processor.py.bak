@@ -32,7 +32,6 @@ class Processor:
     基于 kaldifst 的 FST 处理器
 
     加载预编译的 tagger.fst 和 verbalizer.fst，通过 kaldifst 运行。
-    支持可选的 verbalizer 变体（如 remove_erhua）。
     """
 
     def __init__(self, name, ordertype="itn"):
@@ -40,13 +39,9 @@ class Processor:
         self.ordertype = ordertype
         self.tagger = None
         self.verbalizer = None
-        self._cache_dir = None
-        self._fst_name = None
 
     def build_fst(self, fst_name, cache_dir, overwrite=False):
         """加载预编译的 FST 文件"""
-        self._cache_dir = cache_dir
-        self._fst_name = fst_name
         tagger_path = os.path.join(cache_dir, f"{fst_name}_tagger.fst")
         verbalizer_path = os.path.join(cache_dir, f"{fst_name}_verbalizer.fst")
 
@@ -59,17 +54,6 @@ class Processor:
 
         self.tagger = TextNormalizer(tagger_path)
         self.verbalizer = TextNormalizer(verbalizer_path)
-
-    def set_verbalizer_variant(self, variant):
-        """
-        切换 verbalizer 变体（如 remove_erhua）。
-        variant: 变体后缀，如 "remove_erhua"
-        """
-        if self._cache_dir is None or self._fst_name is None:
-            raise RuntimeError("FST not loaded. Call build_fst() first.")
-        variant_path = os.path.join(self._cache_dir, f"{self._fst_name}_verbalizer_{variant}.fst")
-        if os.path.exists(variant_path):
-            self.verbalizer = TextNormalizer(variant_path)
 
     def tag(self, input_text):
         """Tag the text using the tagger FST."""
