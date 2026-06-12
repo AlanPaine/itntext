@@ -93,6 +93,16 @@ def _load_height_cm_map():
     return mapping
 
 
+def _load_yi_fixed_phrases():
+    """加载'一'字固定搭配保护规则"""
+    rows = _load_tsv("yi_fixed_phrases.tsv")
+    rules = []
+    for row in rows:
+        if len(row) >= 2:
+            rules.append((row[0], row[1]))
+    return rules
+
+
 # 缓存加载的规则
 _STRING_REPLACE_RULES = _load_string_replace_rules()
 _CURRENCY_RULES = _load_currency_rules()
@@ -100,6 +110,7 @@ _DATE_SUFFIX_RULES = _load_date_suffix_rules()
 _TIME_RANGE_RULES = _load_time_range_rules()
 _CN_TIME_MAP = _load_cn_time_map()
 _HEIGHT_CM_MAP = _load_height_cm_map()
+_YI_FIXED_PHRASES = _load_yi_fixed_phrases()
 
 
 def apply_fixes(result: str, original: str) -> str:
@@ -207,7 +218,11 @@ def apply_fixes(result: str, original: str) -> str:
     for pattern, replacement in _CURRENCY_RULES:
         result = result.replace(pattern, replacement)
 
-    # ---- 修复11：其他修正 ----
+    # ---- 修复11："一"字固定搭配保护（从 TSV 加载）----
+    for wrong, correct in _YI_FIXED_PHRASES:
+        result = result.replace(wrong, correct)
+
+    # ---- 修复12：其他修正 ----
     result = result.replace("负五", "-5").replace("负123", "-123").replace("正50", "+50")
     if "第一季度" in original:
         result = result.replace("第1季度", "第一季度")
