@@ -1,6 +1,6 @@
 # itntext vs WeText 全面对比测试报告
 
-> 测试时间: 2025年  
+> 测试时间: 2026年  
 > 测试版本: wetext (latest) vs itntext v3  
 > 测试用例: 125 个标准测试 + 38 个会议关键数值提取
 
