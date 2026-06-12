@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "itntext"
-version = "0.1.1"
+version = "0.1.2"
 description = "Improved Text Normalization and Inverse Text Normalization library based on WeTextProcessing"
 readme = "README.md"
 license = {text = "Apache-2.0"}
@@ -32,3 +32,10 @@ itntext = "itntext.__main__:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["itntext*"]
+
+[tool.setuptools.package-data]
+"itntext.itn.chinese" = ["*.fst"]
+"itntext.tn.chinese" = ["*.fst"]
+"itntext.itn.chinese.data" = ["**/*.tsv"]
+"itntext.tn.chinese.data" = ["**/*.tsv"]
+"itntext.data.postprocess" = ["*.tsv"]
