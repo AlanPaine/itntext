@@ -4,22 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "itntext"
-version = "0.1.5"
-description = "Improved Text Normalization and Inverse Text Normalization library based on WeTextProcessing"
+version = "0.1.6"
+description = "itntext multilingual text normalization and inverse text normalization"
 readme = "README.md"
-license = {text = "Apache-2.0"}
-authors = [
-    {name = "itntext contributors"}
-]
+license = "Apache-2.0"
+authors = [{name = "itntext contributors"}]
 requires-python = ">=3.8"
 dependencies = [
     "kaldifst>=1.0",
+    "regex>=2023.0",
+    "joblib>=1.0",
+    "tqdm>=4.0",
+    "inflect>=7.0",
     "importlib_resources>=5.0; python_version<'3.9'",
 ]
 
 [project.optional-dependencies]
-dev = ["pynini>=2.1.5"]
-test = ["pytest>=7.0", "pytest-benchmark>=4.0"]
+dev = ["pynini>=2.1.5", "wetext>=0.1.4"]
+test = ["pytest>=7.0", "pytest-benchmark>=4.0", "wetext>=0.1.4"]
 
 [project.urls]
 Homepage = "https://github.com/alanpaine/itntext"
@@ -34,8 +36,5 @@ where = ["."]
 include = ["itntext*"]
 
 [tool.setuptools.package-data]
-"itntext.itn.chinese" = ["*.fst"]
-"itntext.tn.chinese" = ["*.fst"]
-"itntext.itn.chinese.data" = ["**/*.tsv"]
-"itntext.tn.chinese.data" = ["**/*.tsv"]
-"itntext.data.postprocess" = ["*.tsv"]
+"itntext" = ["fst/**/*.fst"]
+"itntext.grammars" = ["**/*.tsv", "**/*.far", "**/*.fst", "**/*.txt", "**/*.md"]

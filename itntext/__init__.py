@@ -1,4 +1,4 @@
-from itntext.normalizer import Normalizer
+from itntext.normalizer import Normalizer, preload
 
-__version__ = "0.1.5"
-__all__ = ["Normalizer"]
+__version__ = "0.1.6"
+__all__ = ["Normalizer", "preload"]
